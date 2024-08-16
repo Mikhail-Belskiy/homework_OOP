@@ -3,16 +3,37 @@ class Student:
         self.name = name
         self.surname = surname
         self.gender = gender
-        self.finished_courses = []
-        self.courses_in_progress = []
-        self.grades = {}
+        self.finished_courses = [] #пройденые курсы
+        self.courses_in_progress = [] #изучаются сейчас
+        self.grades = {} #оценки
+
+    def graiding_lecturer(self, lecturer, course, grade):
+        if isinstance (lecturer, Lecturer) and course in lecturer.courses_attached and course in self.finished_courses:
+            if lecturer.grades.get(course, None):
+                    lecturer.grades[course].append(grade)
+            else:
+                    lecturer.grades[course] = [grade]
+        else:
+            print('Вы не можете оценить преподавателя')
+
         
 class Mentor:
     def __init__(self, name, surname):
         self.name = name
         self.surname = surname
-        self.courses_attached = []
+        self.courses_attached = [] #список курсов которые ведут 
         
+    
+
+class Lecturer (Mentor):
+    def __init__(self, name, surname, *grades):
+        super().__init__(name, surname)
+        self.grades= {}
+       
+
+class Reviewer(Mentor):
+    def __init__(self, name, surname):
+        super().__init__(name, surname)   
     def rate_hw(self, student, course, grade):
         if isinstance(student, Student) and course in self.courses_attached and course in student.courses_in_progress:
             if course in student.grades:
@@ -20,26 +41,36 @@ class Mentor:
             else:
                 student.grades[course] = [grade]
         else:
-            return 'Ошибка'
-
-class Lecturer (Mentor):
-    def __init__(self, name, surname):
-        super().__init__(name, surname)
-
-class Reviewer(Mentor):
-    def __init__(self, name, surname):
-        super().__init__(name, surname)
+            return print ('Нелья оценить этого студента')
     
 
 
-best_student = Student('Ruoy', 'Eman', 'your_gender')
-best_student.courses_in_progress += ['Python']
+student_1 = Student ('Bonya', 'Belskaya', 'W')
+student_1.finished_courses = ['Введение в програмирование']
+student_1.courses_in_progress = ['C++', 'Python']
+
+student_2 = Student ('Mikl', 'Petrov', 'M')
+student_2.finished_courses = ['Git']
+student_2.courses_in_progress = ['Python', 'Основы ОПП']
+
+lector_1 = Lecturer ('Boris', 'Ivanov')
+lector_1.courses_attached = ['Python']
+
+lector_2 = Lecturer ('Sergey', 'Kuchenko')
+lector_2.courses_attached = ['C++']
+
+reviver_1 = Reviewer ('Sam', 'Kasper')
+reviver_1.courses_attached = ['C++', 'Python']
+
+reviver_2 = Reviewer ('Sam', 'Kasper')
+reviver_2.courses_attached = ['C++', 'Git']
+
  
-cool_mentor = Mentor('Some', 'Buddy')
-cool_mentor.courses_attached += ['Python']
- 
-cool_mentor.rate_hw(best_student, 'Python', 10)
-cool_mentor.rate_hw(best_student, 'Python', 10)
-cool_mentor.rate_hw(best_student, 'Python', 10)
- 
-print(best_student.grades)
+reviver_1.rate_hw(student_1, 'Python', 10)
+reviver_1.rate_hw(student_1, 'Python', 10)
+reviver_1.rate_hw(student_1, 'Python', 10)
+
+student_1.graiding_lecturer(lector_1, 'Python', 10)
+
+print(student_1.grades)
+print(lector_1.grades)
