@@ -1,5 +1,7 @@
-cook_book = {}
 
+from pprint import pprint
+
+cook_book = {}
 with open('/home/mikl/Рабочий стол/homework/recipes.txt', 'rt', encoding = "utf-8") as file:
     for l in file:
         dish_name = l.strip()
@@ -13,4 +15,21 @@ with open('/home/mikl/Рабочий стол/homework/recipes.txt', 'rt', encod
         separate = file.readline()
         cook_book.update(dep)
 
-print(f'cook_book = {cook_book}')
+#pprint(f'cook_book = {cook_book}')
+
+
+
+def get_shop_list_by_dishes (dishes:list, person_count: int):
+    ingridients = {}
+    for dish in dishes: # dish = омлет
+        if dish in cook_book:
+            for ingridient in cook_book[dish]:
+                if ingridient ['ingredient_name'] in ingridients:
+                    ingridients [ingridient['ingredient_name']]['quantity'] += int(ingridient['quantity']) * person_count
+                else:
+                    ingridients [ingridient['ingredient_name']]: ingridients[ingridient['ingredient_name']] ={'measure':ingridient['measure'],'quantity':int(ingridient['quantity']) * person_count} 
+        else:    
+            print(f'Блюда "{dish}" нет в книге рецептов')
+    return ingridients
+
+pprint (get_shop_list_by_dishes(['Запеченный картофель', 'Омлет'], 2))
